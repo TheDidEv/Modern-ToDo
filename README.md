@@ -1,5 +1,6 @@
 # :clipboard: Info
     Pet-project, Modern ToDo List
+    
 # 🛠️Technologies
 ```
 Python
