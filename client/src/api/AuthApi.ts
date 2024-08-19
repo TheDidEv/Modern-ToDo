@@ -1,11 +1,17 @@
-import AxiosInstance from "../utils/AxiosInstance";
-
 export interface UserData {
     username: string,
     email: string,
 }
 
 export const loginApi = async (username: string, password: string) => {
-    const response = await AxiosInstance.post(`/api/token`, { username, password });
-    return response.data;
+    let response = await fetch('http://127.0.0.1:8000/api/token/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 'username': username, 'password': password })
+    })
+    let data = await response.json()
+
+    return data;
 }
