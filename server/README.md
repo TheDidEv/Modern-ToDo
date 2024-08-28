@@ -149,3 +149,34 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000"
 ]
 ```
+
+### Create taskcollection
+```
+$ python3 manage.py startapp taskcollection
+
+# Add auth check
+# on setting.py add 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+# on taskcollection/views.py add
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+...
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_all_collections(request):
+
+# and get data from access token on handler
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def put_tasks(request):
+    user = request.user
+    return Response({"message": user.id})
+```

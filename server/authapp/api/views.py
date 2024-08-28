@@ -12,6 +12,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
+        token['id'] = user.id
         token['username'] = user.username
         token['email'] = user.email
         # ...
@@ -20,6 +21,19 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
 class MyTokenOtbainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    
+    # def post(self, request, *args, **kwargs):
+    #     response = super().post(request, *args, **kwargs)
+    #     token_data = response.data
+
+    #     user = self.request.user
+
+    #     token_data.update({
+    #         'username': user.username,
+    #         'email': user.email,
+    #     })
+
+    #     return Response(token_data)
 
 @api_view(['GET'])
 def getRoutes(request):
