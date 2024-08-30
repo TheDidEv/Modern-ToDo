@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,17 +20,17 @@ def get_all_collections(request):
         )
     
     serialize = TaskCollectionSerializer(task_collections, many=True)
-    return Response(serialize.data)
+    return Response(serialize.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def post_task(request):
     user = request.user
 
-    split_data = request.data
-    split_data['user'] = user.id
+    merge_data = request.data
+    merge_data['user'] = user.id
 
-    serializer = TaskCollectionSerializer(data=split_data)
+    serializer = TaskCollectionSerializer(data=merge_data)
     if serializer.is_valid():
         serializer.save(user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -49,13 +47,16 @@ def put_task(request, pk):
     try:
         task_collection = TaskCollection.objects.get(pk=pk, user=user)
     except TaskCollection.DoesNotExist:
-        return Response({"message:": "Task collection not found"}), status.HTTP_404_NOT_FOUND
+        return (Response(
+            {"message:": "Task collection not found"}),
+            status.HTTP_404_NOT_FOUND
+        )
 
-    split_data = request.data
-    split_data['user'] = user.id
+    merge_data = request.data
+    merge_data['user'] = user.id
 
     # update object if data valid
-    serializer = TaskCollectionSerializer(task_collection, data=split_data)
+    serializer = TaskCollectionSerializer(task_collection, data=merge_data)
     if serializer.is_valid():
         serializer.save(user=user)
         return Response(serializer.data, status=status.HTTP_200_OK)

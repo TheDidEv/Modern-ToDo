@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     
     'authapp',
     'taskcollection',
+    'todo',
 ]
 
 REST_FRAMEWORK = {
