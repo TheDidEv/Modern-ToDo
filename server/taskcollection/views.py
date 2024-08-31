@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import TaskCollection
+from .taskstatus.models import TaskStatus
 from .serializers import TaskCollectionSerializer
 
 @api_view(['GET'])
@@ -33,6 +34,7 @@ def post_task(request):
     serializer = TaskCollectionSerializer(data=merge_data)
     if serializer.is_valid():
         serializer.save(user=user)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
