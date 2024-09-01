@@ -56,7 +56,7 @@ def update_task(request, todo_id):
     request = request.data
 
     try:
-        TaskStatus(collection=task.collection, name=request['status'])
+        TaskStatus(collection=task.collection)
     except TaskStatus.DoesNotExist:
         return Response(
             {"message": "No task status found. Please create status, before update task"},
@@ -71,6 +71,13 @@ def update_task(request, todo_id):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['DELETE'])
-# @permission_classes([IsAuthenticated])
-# def delete_task(request, coll_id):
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_task(request, id):
+    try:
+        todo = ToDo.objects.get(id=id)
+    except ToDo.DoesNotExist:
+        return Response({"message": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    todo.delete()
+    return Response({"message": "ToDo wad deleted"}, status=status.HTTP_200_OK)
